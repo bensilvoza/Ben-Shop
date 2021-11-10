@@ -37,6 +37,12 @@ router.post("/login", async function (req, res){
 	var hash = MD5(data["password"])
 	
 	var customer = await Register.findOne({name: data["name"]})
+	// name is not present on the database
+	if (customer === null){
+		req.session.incorrect_password_email_helper = true
+		res.redirect("/login")
+	}
+	
 	if (hash === customer["password"]){
 		req.session.name = data["name"]
 		res.redirect("/")
