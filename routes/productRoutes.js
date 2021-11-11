@@ -3,6 +3,7 @@ var express = require("express");
 var router  = express.Router();
 var Product = require("../models/product")
 var Cart = require("../models/cart")
+var Address = require("../models/address")
 
 // landing
 router.get("/", function (req, res){
@@ -178,23 +179,61 @@ router.put("/cart/edit/:id", async function (req, res){
 	res.redirect("/cart")
 })
 
-// cart
-router.get("/cart", async function (req, res){
+// shipping, address
+router.get("/shipping", async function (req, res){
 	var customer_name = req.session.name
-	var cart = await Cart.findOne({customer_name: customer_name})
-	var subtotal = 0
-	if (cart === null){
-		var cart = {cart: []}
-		return res.render("cart/cart", {cart: cart, subtotal: subtotal})
+	var find_address = await Address.findOne({customer_name: customer_name})
+	var address = {street: "", city: "", postal_code: "", country: ""}
+	if (find_address === null){
+		return res.render("checkout/shipping", {address: address})
+	} else {
+		address = find_address
+		return res.render("checkout/shipping", {address: address})
 	}
 	
-	for (var i = 0; i < cart["cart"].length; i++){
-		 subtotal = subtotal + cart["cart"][i]["price"]
-	}
-	
-	res.render("cart/cart", {cart: cart, subtotal: subtotal})
 })
 
+// shipping --> get address
+router.post("/shipping", async function (req, res){
+	var customer_name = req.session.name
+	
+	// input address
+	var input = {customer_name: customer_name,
+				 street: req.body.street,
+				 city: req.body.city,
+				 postal_code: req.body.postal_code,
+				 country: req.body.country }
+	
+	var find_address = await Address.findOne({customer_name: customer_name})
+	if (find_address === null){
+		var address = new Address({ customer_name: input["customer_name"], street: input["street"], city: input["city"], postal_code: input["postal_code"], country: input["country"] })         
+		await address.save()
+		res.redirect("/payment")
+	} else {
+		await Address.findOneAndUpdate({customer_name: customer_name}, input)
+		res.redirect("/payment")
+	}
+	
+})
+
+// payment
+router.get("/payment", async function (req, res){
+	res.render("checkout/payment")
+})
+
+// place order
+router.get("/place", async function (req, res){
+	var customer_name = req.session.name
+	var address = await Address.findOne({customer_name: customer_name})
+	var cart = await Cart.findOne({customer_name: customer_name})
+	var partial_total = 0
+	for (var i = 0; i < cart["cart"].length; i++){
+		 partial_total = partial_total + cart["cart"][i]["price"]
+	}
+	var tax = partial_total * 0.05
+	var total = partial_total + tax
+	res.render("checkout/place", {address: address, cart: cart, partial_total: partial_total, tax: tax, total: total})           
+})
 
 
 // exports

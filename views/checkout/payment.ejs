@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -121,34 +122,23 @@
 			
 			<div class="row justify-content-center mb-5">
 				<div class="col-md-4">
-					<h2 class="d-inline">Shipping</h2>
+					<h2 class="d-inline">Payment Method</h2>
 				</div>
 			</div>
 			
 			<div class="row justify-content-center">
 				<div class="col-md-4">
 				
-				<form action="/shipping" method="post" autocomplete="off">
-				  <div class="mb-3">
-                    <label>Street</label>
-                    <input type="text" class="form-control" value="<%=address["street"]%>" name="street" required>
-                  </div>
-				  <div class="mb-3">
-                    <label>City</label>
-                    <input type="text" class="form-control" value="<%=address["city"]%>" name="city" required>
-                  </div>
-				  <div class="mb-3">
-                    <label>Postal Code</label>
-                    <input type="text" class="form-control" value="<%=address["postal_code"]%>" name="postal_code" required>
-                  </div>
-				  <div class="mb-3">
-                    <label>Country</label>
-                    <input type="text" class="form-control" value="<%=address["country"]%>" name="country" required>
-                  </div>
-				  
-				  <button type="submit" class="btn btn-dark rounded-pill">CONTINUE</button>
-				  </form>
-			
+				<h4 class="text-secondary">Select Method</h4>
+				<div class="form-check mb-5">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Paypal or Credit Card
+                  </label>
+                </div>
+				<a href="/shipping" class="btn btn-outline-dark rounded-pill">GO BACK</a>
+				<a href="/place" class="btn btn-dark rounded-pill">CONTINUE</a>	
+				
 				</div>
 			</div>
 			
