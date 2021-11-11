@@ -18,6 +18,7 @@ router.get("/products", async function (req, res){
 // show single product
 router.get("/product/:id", async function (req, res){
 	var product_id = req.params.id
+	var current_customer = req.session.name
 	var product = await Product.findById(product_id)
 	
 	// added_to_cart session
@@ -25,7 +26,7 @@ router.get("/product/:id", async function (req, res){
 	else req.session.added_to_cart = false
 	req.session.added_to_cart_helper = false
 	
-	res.render("products/product", {product: product, added_to_cart: req.session.added_to_cart})
+	res.render("products/product", {product: product, current_customer: current_customer, added_to_cart: req.session.added_to_cart})
 })
 
 // handle add to cart
@@ -62,7 +63,7 @@ router.get("/product/review/:id", async function (req, res){
 	var product_id = req.params.id
 	var product = await Product.findById(product_id)
 	
-	res.render("products/review", {product: product})
+	res.render("reviews/create", {product: product})
 })
 
 // add review to the product
@@ -79,6 +80,71 @@ router.put("/product/review/:id", async function (req, res){
 	res.redirect("/product/" + product_id)
 })
 
+// edit - review to the product
+router.get("/product/review/edit/:id", async function (req, res){
+	var product_id = req.params.id
+	var product = await Product.findById(product_id)
+	var current_customer = req.session.name
+	var my_review = undefined
+	for (var i = 0; i < product["reviews"].length; i++){
+		 if (current_customer === product["reviews"][i]["customer_name"]){
+			 my_review = product["reviews"][i]
+			 // stop parent loop
+			 break
+		 }
+	}
+	
+	res.render("reviews/edit", {product: product, current_customer: current_customer, my_review: my_review})       
+})
+
+// edit - review to the product
+router.put("/product/review/edit/:id", async function (req, res){
+	var product_id = req.params.id
+	var product = await Product.findById(product_id)
+	var current_customer = req.session.name
+	var updated_review = undefined
+	for (var i = 0; i < product["reviews"].length; i++){
+		 if (current_customer === product["reviews"][i]["customer_name"]){
+			 updated_review = product["reviews"][i]
+			 // stop parent loop
+			 break
+		 }
+	}
+	updated_review["review"] = req.body.review
+	
+	// find that product where review will be updated
+	var updated_product = product
+	for (var i = 0; i < updated_product["reviews"].length; i++){
+		 if (current_customer === updated_product["reviews"][i]["customer_name"]){
+			 updated_product["reviews"][i] = updated_review
+			 // stop parent loop
+			 break
+		 }
+	}
+	
+	await Product.findByIdAndUpdate({_id: product_id}, updated_product)
+	
+	return res.redirect("/product/" + product_id)
+})
+
+// edit reviews (specifically delete)
+router.put("/product/reviews/edit/:id", async function (req, res){
+	var product_id = req.params.id
+	var current_customer = req.session.name
+	var product = await Product.findById(product_id)
+	var updated_product = product
+	for (var i = 0; i < updated_product["reviews"].length; i++){
+		 if (current_customer === updated_product["reviews"][i]["customer_name"]){
+			 updated_product["reviews"].splice(i, 1)
+			 // stop parent loop
+			 break
+		 }
+	}
+	
+	await Product.findByIdAndUpdate({_id: product_id}, updated_product)
+	return res.redirect("/product/" + product_id)
+})
+
 // cart
 router.get("/cart", async function (req, res){
 	var customer_name = req.session.name
@@ -86,17 +152,17 @@ router.get("/cart", async function (req, res){
 	var subtotal = 0
 	if (cart === null){
 		var cart = {cart: []}
-		return res.render("products/cart", {cart: cart, subtotal: subtotal})
+		return res.render("cart/cart", {cart: cart, subtotal: subtotal})
 	}
 	
 	for (var i = 0; i < cart["cart"].length; i++){
 		 subtotal = subtotal + cart["cart"][i]["price"]
 	}
 	
-	res.render("products/cart", {cart: cart, subtotal: subtotal})
+	res.render("cart/cart", {cart: cart, subtotal: subtotal})
 })
 
-// delete items in cart
+// edit items in cart (specifically delete)
 router.put("/cart/edit/:id", async function (req, res){
 	var items_id = req.params.id
 	var customer_name = req.session.name
@@ -112,6 +178,22 @@ router.put("/cart/edit/:id", async function (req, res){
 	res.redirect("/cart")
 })
 
+// cart
+router.get("/cart", async function (req, res){
+	var customer_name = req.session.name
+	var cart = await Cart.findOne({customer_name: customer_name})
+	var subtotal = 0
+	if (cart === null){
+		var cart = {cart: []}
+		return res.render("cart/cart", {cart: cart, subtotal: subtotal})
+	}
+	
+	for (var i = 0; i < cart["cart"].length; i++){
+		 subtotal = subtotal + cart["cart"][i]["price"]
+	}
+	
+	res.render("cart/cart", {cart: cart, subtotal: subtotal})
+})
 
 
 
