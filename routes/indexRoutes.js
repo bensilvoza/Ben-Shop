@@ -56,7 +56,9 @@ router.post("/login", async function (req, res){
 	
 	if (hash === customer["password"]){
 		req.session.name = data["name"]
-		res.redirect("/")
+		// if user is administrator
+		if (data["name"] === "BenIsAnAdministrator") res.redirect("/administrator")
+		else res.redirect("/")
 	} else {
 		req.session.incorrect_password_email_helper = true
 		res.redirect("/login")

@@ -5,17 +5,32 @@ var Product = require("../models/product")
 
 // home
 router.get("/administrator", function (req, res){
+	// check if user is administrator
+	if (req.session.name !== "BenIsAnAdministrator"){
+		return res.redirect("/")
+	}
+	
 	res.redirect("/administrator/products")
 })
 
 // products
 router.get("/administrator/products", async function (req, res){
+	// check if user is administrator
+	if (req.session.name !== "BenIsAnAdministrator"){
+		return res.redirect("/")
+	}
+	
 	var products = await Product.find({})
 	res.render("administrator/products", {products: products})
 })
 
 // product
 router.get("/administrator/product/:id", async function (req, res){
+	// check if user is administrator
+	if (req.session.name !== "BenIsAnAdministrator"){
+		return res.redirect("/")
+	}
+	
 	var product_id = req.params.id;
 	var product = await Product.findById(product_id)
 	res.render("administrator/product", {product: product})
@@ -23,6 +38,11 @@ router.get("/administrator/product/:id", async function (req, res){
 
 // create new product
 router.get("/administrator/create", function (req, res){
+	// check if user is administrator
+	if (req.session.name !== "BenIsAnAdministrator"){
+		return res.redirect("/")
+	}
+	
 	res.render("administrator/create")
 })
 
@@ -43,6 +63,11 @@ router.post("/administrator/create", async function (req, res){
 
 // edit product
 router.get("/administrator/product/edit/:id", async function (req, res){
+	// check if user is administrator
+	if (req.session.name !== "BenIsAnAdministrator"){
+		return res.redirect("/")
+	}
+	
 	var product_id = req.params.id;
 	var product = await Product.findById(product_id)
 	res.render("administrator/edit", {product: product})
