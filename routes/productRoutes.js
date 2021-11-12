@@ -4,6 +4,8 @@ var router  = express.Router();
 var Product = require("../models/product")
 var Cart = require("../models/cart")
 var Address = require("../models/address")
+var Order = require("../models/order")
+
 
 // landing
 router.get("/", function (req, res){
@@ -233,6 +235,43 @@ router.get("/place", async function (req, res){
 	var tax = partial_total * 0.05
 	var total = partial_total + tax
 	res.render("checkout/place", {address: address, cart: cart, partial_total: partial_total, tax: tax, total: total})           
+})
+
+// successfully place order --> save to database
+router.post("/place", async function (req, res){
+	var customer_name = req.session.name
+	var id = Math.floor( Math.random()*10000000001 )
+	var address = await Address.findOne({customer_name: customer_name})
+	var cart = await Cart.findOne({customer_name: customer_name})
+	var partial_total = 0
+	for (var i = 0; i < cart["cart"].length; i++){
+		 partial_total = partial_total + cart["cart"][i]["price"]
+	}
+	var tax = partial_total * 0.05
+	var total = partial_total + tax
+	
+	var order = new Order({customer_name: customer_name, id: id, address: address, order: cart["cart"], partial_total: partial_total, tax: tax, total: total })         
+	await order.save()
+	
+	// empty the cart because order was successfully place
+	await Cart.findOneAndDelete({customer_name: customer_name})
+	
+	res.redirect("/profile")           
+})
+
+// profile
+router.get("/profile", async function (req, res){
+	var customer_name = req.session.name
+	var orders = await Order.find({})	
+	var my_orders = []
+	
+	for (var i = 0; i < orders.length; i++){
+		 if (orders[i]["customer_name"] === customer_name){
+			 my_orders.push(orders[i])
+		 }
+	}
+
+	res.render("profile", {my_orders: my_orders})
 })
 
 
