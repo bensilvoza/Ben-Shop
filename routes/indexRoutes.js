@@ -8,6 +8,16 @@ var Register = require("../models/register");
 // login
 router.get("/login", function (req, res){
 	
+	// check if customer is login already
+	if (req.session.name !== undefined){
+		return res.redirect("/profile")
+	}
+	
+	// anonymous customer session
+	if (req.session.customer_anonymous_helper === true) req.session.customer_anonymous = true
+	else req.session.customer_anonymous = false
+	req.session.customer_anonymous_helper = false
+	
 	// session for account succesfully created session
 	if (req.session.account_successfully_created_helper === true) req.session.account_successfully_created = true     
 	else req.session.account_successfully_created = false
@@ -21,7 +31,8 @@ router.get("/login", function (req, res){
 	res.render("login",
 	    {
 		 account_successfully_created: req.session.account_successfully_created,
-		 incorrect_password_email: req.session.incorrect_password_email
+		 incorrect_password_email: req.session.incorrect_password_email,
+		 customer_anonymous: req.session.customer_anonymous
 	    }
 	)
 })
@@ -122,6 +133,13 @@ router.post("/register", async function (req, res){
 	req.session.account_successfully_created_helper = true	
 	res.redirect("/login")
 })
+
+// logout
+router.get("/logout", function(req, res){
+  req.session.name = undefined
+  res.redirect("/login");
+});
+
 
 
 // exports

@@ -44,19 +44,29 @@
                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
 				  <% } %>
-				  <!-- end, alert for incorrect email or password -->	  
+				  <!-- end, alert for incorrect email or password -->
+					  
+				  <!-- alert for anonymous customer -->
+				  <% if (customer_anonymous === true){ %>
+				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                     You must login first
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+				  <% } %>
+				  <!-- end, alert for anonymous customer -->
+				
 					  
 				  <div class="mb-3">
                     <label>Name</label>
-                    <input type="text" class="form-control rounded-pill" name="name">
+                    <input type="text" class="form-control rounded-pill" name="name" required>
                   </div>
 				  <div class="mb-3">
                     <label>Password</label>
-                    <input type="password" class="form-control rounded-pill" name="password">
+                    <input type="password" class="form-control rounded-pill" name="password" required>
                   </div>
 				  <div class="d-grid gap-2">
 				  <button type="submit" class="btn btn-primary rounded-pill">SIGN IN</button>
-				  <button type="button" class="btn btn-secondary rounded-pill">CANCEL</button>
+				  <a href="/" class="btn btn-secondary rounded-pill">CANCEL</a>
 				  </div>
 				  </form>
 				  

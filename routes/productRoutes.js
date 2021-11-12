@@ -34,6 +34,13 @@ router.get("/product/:id", async function (req, res){
 
 // handle add to cart
 router.post("/product/:id", async function (req, res){
+	
+	// check if login
+	if (req.session.name === undefined){
+		req.session.customer_anonymous_helper = true
+		return res.redirect("/login")
+	}
+	
 	var product_id = req.params.id
 	var customer_name = req.session.name
 	var product = await Product.findById(product_id)
@@ -63,6 +70,13 @@ router.post("/product/:id", async function (req, res){
 
 // add review to the product
 router.get("/product/review/:id", async function (req, res){
+	
+	// check if login
+	if (req.session.name === undefined){
+		req.session.customer_anonymous_helper = true
+		return res.redirect("/login")
+	}
+	
 	var product_id = req.params.id
 	var product = await Product.findById(product_id)
 	

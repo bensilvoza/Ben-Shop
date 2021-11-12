@@ -161,7 +161,9 @@
 						<h4 class="d-inline text-secondary m-0">₱<%=subtotal%>.00</h4>
 					</div>
 					<hr>
+					<% if ( cart["cart"].length !== 0 ){ %>
 					<a href="/shipping" class="btn btn-dark">PROCEED TO CHECKOUT</a>
+					<% } %>
 				</div>
 			</div>
 			
