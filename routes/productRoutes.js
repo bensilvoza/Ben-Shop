@@ -7,6 +7,7 @@ var Address = require("../models/address")
 var Order = require("../models/order")
 
 
+
 // landing
 router.get("/", function (req, res){
 	res.redirect("/products")
@@ -236,6 +237,7 @@ router.post("/shipping", async function (req, res){
 router.get("/payment", async function (req, res){
 	res.render("checkout/payment")
 })
+
 
 // place order
 router.get("/place", async function (req, res){

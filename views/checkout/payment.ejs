@@ -15,6 +15,7 @@
 		/>
 
 		<title>BENSHOP</title>
+		
 	</head>
 	<body>
 		<nav class="navbar sticky-top navbar-light bg-light">
@@ -125,20 +126,78 @@
 			
 			<div class="row justify-content-center">
 				<div class="col-md-4">
-				
 				<h4 class="text-secondary">Select Method</h4>
-				<div class="form-check mb-5">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    Paypal or Credit Card
+				<div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                  <label class="form-check-label" for="flexCheckChecked">
+                    Cash on Delivery
                   </label>
                 </div>
-				<a href="/shipping" class="btn btn-outline-dark rounded-pill">GO BACK</a>
-				<a href="/place" class="btn btn-dark rounded-pill">CONTINUE</a>	
-				
 				</div>
 			</div>
+			<br>
 			
+			<div class="row justify-content-center">
+				<div class="col-md-4">
+				   <h6 class="text-center text-secondary">OR</h6>
+				</div>
+			</div>
+			<br>
+			
+			<!-- paypal -->
+			<div class="row justify-content-center">
+				<div class="col-md-4">
+				   <!-- Include the PayPal JavaScript SDK; replace "test" with your own sandbox Business account app client ID -->
+                   <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+
+                   <!-- Set up a container element for the button -->
+                   <div id="paypal-button-container"></div>
+
+                   <script>
+                     paypal.Buttons({
+               
+                       // Sets up the transaction when a payment button is clicked
+                       createOrder: function(data, actions) {
+                         return actions.order.create({
+                           purchase_units: [{
+                             amount: {
+                               value: '77.44' // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+                             }
+                           }]
+                         });
+                       },
+
+                       // Finalize the transaction after payer approval
+                       onApprove: function(data, actions) {
+                         return actions.order.capture().then(function(orderData) {
+                           // Successful capture! For dev/demo purposes:
+                               console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                               var transaction = orderData.purchase_units[0].payments.captures[0];
+                               alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+               
+                           // When ready to go live, remove the alert and show a success message within this page. For example:
+                           // var element = document.getElementById('paypal-button-container');
+                           // element.innerHTML = '';
+                           // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                           // Or go to another URL:  actions.redirect('thank_you.html');
+                         });
+                       }
+                     }).render('#paypal-button-container');
+
+                   </script>
+				</div>
+			</div>
+			<!-- end, paypal -->
+			
+			<br>
+			<br>
+			
+			<div class="row justify-content-center">
+				<div class="col-md-4">
+				<a href="/shipping" class="btn btn-outline-dark rounded-pill">GO BACK</a>
+				<a href="/place" class="btn btn-dark rounded-pill">CONTINUE</a>	
+				</div>
+			</div>
 			
 		</div>
 
