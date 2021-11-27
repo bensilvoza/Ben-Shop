@@ -29,7 +29,7 @@
 				  <h1 class="mb-4">Sign In</h1>
 					  
 				  <!-- alert for account successfully created -->
-				  <% if (account_successfully_created === true){ %>
+				  <% if (account_created === true){ %>
 				  <div class="alert alert-success alert-dismissible fade show" role="alert">
                      Account successfully created
                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -38,18 +38,18 @@
 				  <!-- end, alert for account successfully created -->
 					  
 				  <!-- alert for incorrect email or password -->
-				  <% if (incorrect_password_email === true){ %>
+				  <% if (incorrect_credential === true){ %>
 				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                     Incorrect email or password
+                     Incorrect credential
                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
 				  <% } %>
 				  <!-- end, alert for incorrect email or password -->
-					  
+			
 				  <!-- alert for anonymous customer -->
-				  <% if (customer_anonymous === true){ %>
+				  <% if (unknown_customer === true){ %>
 				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                     You must login first
+                     Must be login first
                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
 				  <% } %>
@@ -58,24 +58,19 @@
 					  
 				  <div class="mb-3">
                     <label>Name</label>
-                    <input type="text" class="form-control rounded-pill" name="name" required>
+                    <input type="text" class="form-control" name="name" required>
                   </div>
 				  <div class="mb-3">
                     <label>Password</label>
-                    <input type="password" class="form-control rounded-pill" name="password" required>
+                    <input type="password" class="form-control" name="password" required>
                   </div>
 				  <div class="d-grid gap-2">
-				  <button type="submit" class="btn btn-primary rounded-pill">SIGN IN</button>
-				  <a href="/" class="btn btn-secondary rounded-pill">CANCEL</a>
+				  <button type="submit" class="btn btn-dark">SIGN IN</button>
+				  <a href="/register" class="btn btn-outline-secondary">CREATE ACCOUNT</a>
 				  </div>
 				  </form>
 				  
-				  <br>
-				  <h6 class="text-center">OR</h6>
-				  <br>
-				  <div class="d-grid">
-                    <a href="/register" class="btn btn-outline-dark rounded-pill" type="button">CREATE ACCOUNT</a>        
-                  </div>
+				  
 			  </div>
 		  </div>
 	  </div>

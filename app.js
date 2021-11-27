@@ -1,17 +1,17 @@
 
 
 //require
-var express = require('express'); //express framework
-var bodyParser = require('body-parser');
-var ejs = require('ejs');
+var express = require('express')
+var bodyParser = require('body-parser')
+var ejs = require('ejs')
 var methodOverride = require("method-override")
-var mongoose = require('mongoose');
-var session = require('express-session');
+var mongoose = require('mongoose')
+var session = require('express-session')
 
 // require routes
-var administratorRoutes = require("./routes/administratorRoutes")
-var indexRoutes = require("./routes/indexRoutes")
-var productRoutes = require("./routes/productRoutes")
+var admin = require("./routes/admin")
+var index = require("./routes/index")
+var product = require("./routes/product")
 
 //use
 var app = express();
@@ -42,9 +42,9 @@ connection.once('open', function () {
 
 //======
 //ROUTES
-app.use(administratorRoutes)
-app.use(indexRoutes);
-app.use(productRoutes)
+app.use(admin)
+app.use(index);
+app.use(product)
 
 
 //app.listen

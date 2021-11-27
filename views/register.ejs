@@ -36,16 +36,8 @@
                   </div>
 				  <% } %>
 				  <!-- end, alert for name that are already taken -->
-					  
-				  <!-- alert for unmatch password -->
-				  <% if (unmatch_password === true){ %>
-				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                     Password do not match
-                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-				  <% } %>
-				  <!-- end, alert for unmatch password -->
-					  
+				
+			
 				  <!-- alert for weak password -->
 				  <% if (weak_password === true){ %>
 				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -57,35 +49,38 @@
 					  
 				  <div class="mb-3">
                     <label>Name</label>
-                    <input type="text" class="form-control rounded-pill" name="name" required>
+                    <input type="text" class="form-control" name="name" required>
                   </div>
+					  
 				  <div class="mb-3">
-                    <label>Email Address</label>
-                    <input type="email" class="form-control rounded-pill" name="email" required>
+                    <label>Email</label>
+                    <input type="email" class="form-control" name="email" required>
                   </div>
+			
 				  <div class="mb-3">
                     <label>Password</label>
-                    <input type="password" class="form-control rounded-pill" name="password" required>
+                    <input type="password" class="form-control" name="password" required>
                   </div>
-				  <div class="mb-3">
-                    <label>Confirm Password</label>
-                    <input type="password" class="form-control rounded-pill" name="confirm_password" required>
-                  </div>
+				 
 				  <div class="d-grid gap-2">
-				  <button type="submit" class="btn btn-primary rounded-pill">CREATE ACCOUNT</button>
-				  <a href="/" class="btn btn-secondary rounded-pill">CANCEL</a>
+				  <button type="submit" class="btn btn-dark">CREATE ACCOUNT</button>
+				  <a href="/login" class="btn btn-outline-secondary">SIGN IN</a>
 				  </div>
 				  </form>	  
 				  <br>
-				  <h6 class="text-center">OR</h6>
 				  <br>
-				  <div class="d-grid">
-                    <a href="/login" class="btn btn-outline-dark rounded-pill" type="button">SIGN IN</a>
-                  </div>
+				  
+				  
 			  </div>
 		  </div>
 	  </div>
 
+	  
+	  <!-- footer -->
+	  <div class="footer text-center fixed-bottom">
+	    <p class="text-secondary">Designed and built with all the love, @Ben</p>
+	  </div>
+	  
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

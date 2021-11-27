@@ -1,31 +1,31 @@
 
-var express = require("express");
-var router  = express.Router();
+var express = require("express")
+var router  = express.Router()
 var Product = require("../models/product")
 
 // home
-router.get("/administrator", function (req, res){
+router.get("/admin", function (req, res){
 	// check if user is administrator
 	if (req.session.name !== "BenIsAnAdministrator"){
 		return res.redirect("/")
 	}
 	
-	res.redirect("/administrator/products")
+	res.redirect("/admin/products")
 })
 
 // products
-router.get("/administrator/products", async function (req, res){
+router.get("/admin/products", async function (req, res){
 	// check if user is administrator
 	if (req.session.name !== "BenIsAnAdministrator"){
 		return res.redirect("/")
 	}
 	
 	var products = await Product.find({})
-	res.render("administrator/products", {products: products})
+	res.render("admin/products", {products: products})
 })
 
 // product
-router.get("/administrator/product/:id", async function (req, res){
+router.get("/admin/product/:id", async function (req, res){
 	// check if user is administrator
 	if (req.session.name !== "BenIsAnAdministrator"){
 		return res.redirect("/")
@@ -33,20 +33,20 @@ router.get("/administrator/product/:id", async function (req, res){
 	
 	var product_id = req.params.id;
 	var product = await Product.findById(product_id)
-	res.render("administrator/product", {product: product})
+	res.render("admin/product", {product: product})
 })
 
 // create new product
-router.get("/administrator/create", function (req, res){
+router.get("/admin/create", function (req, res){
 	// check if user is administrator
 	if (req.session.name !== "BenIsAnAdministrator"){
 		return res.redirect("/")
 	}
 	
-	res.render("administrator/create")
+	res.render("admin/create")
 })
 
-router.post("/administrator/create", async function (req, res){
+router.post("/admin/create", async function (req, res){
 	var product = {
 		"name": req.body.name,
 		"price": req.body.price,
@@ -57,12 +57,12 @@ router.post("/administrator/create", async function (req, res){
 	
 	var handle_product = new Product({"name": product["name"], "price": product["price"], "quantity": product["quantity"], "photoUrl": product["photoUrl"], "description": product["description"]});                    
 	await handle_product.save()
-	res.redirect("/administrator")
+	res.redirect("/admin")
 	
 })
 
 // edit product
-router.get("/administrator/product/edit/:id", async function (req, res){
+router.get("/admin/product/edit/:id", async function (req, res){
 	// check if user is administrator
 	if (req.session.name !== "BenIsAnAdministrator"){
 		return res.redirect("/")
@@ -70,11 +70,11 @@ router.get("/administrator/product/edit/:id", async function (req, res){
 	
 	var product_id = req.params.id;
 	var product = await Product.findById(product_id)
-	res.render("administrator/edit", {product: product})
+	res.render("admin/edit", {product: product})
 })
 
 // edit product
-router.put("/administrator/product/edit/:id", async function (req, res){
+router.put("/admin/product/edit/:id", async function (req, res){
 	var product_id = req.params.id;
 	var product = {
 		"name": req.body.name,
@@ -85,14 +85,14 @@ router.put("/administrator/product/edit/:id", async function (req, res){
 	}
 	var updatedProduct = await Product.findByIdAndUpdate(product_id, product);
 	//await updatedProduct.save()
-	res.redirect("/administrator")
+	res.redirect("/admin")
 })
 
 // delete product
-router.delete("/administrator/product/delete/:id", async function (req, res){
+router.delete("/admin/product/delete/:id", async function (req, res){
 	var product_id = req.params.id;
 	await Product.findByIdAndDelete(product_id);
-	res.redirect("/administrator")
+	res.redirect("/admin")
 })
 
 
