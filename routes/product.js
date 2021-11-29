@@ -110,7 +110,7 @@ router.post("/product/:id", async function (req, res){
 router.get("/product/review/:id", async function (req, res){
 	var customer_name = req.session.customer_name
 	
-	// not yet logged in
+	// unknown customer_name
 	if (customer_name === undefined){
 		req.session.unknown_customer_helper = true
 		return res.redirect("/login")
@@ -242,7 +242,7 @@ router.post("/cart/edit/:id", async function (req, res){
 	res.redirect("/cart")
 })
 
-// shipping, address
+// shipping
 router.get("/shipping", async function (req, res){
 	var customer_name = req.session.customer_name
 	
@@ -263,7 +263,7 @@ router.get("/shipping", async function (req, res){
 	
 })
 
-// shipping --> get address
+// shipping
 router.post("/shipping", async function (req, res){
 	var customer_name = req.session.customer_name
 	
@@ -289,6 +289,12 @@ router.post("/shipping", async function (req, res){
 
 // summary
 router.get("/summary", async function (req, res){
+	
+	// unknown customer_name
+	if (req.session.customer_name === undefined){
+		return res.redirect("/login")
+	}
+	
 	var customer_name = req.session.customer_name
 	var address = await Address.findOne({customer_name: customer_name})
 	var cart = req.session.cart
@@ -329,11 +335,23 @@ router.post("/summary", async function (req, res){
 
 // payment
 router.get("/payment", async function (req, res){
+	
+	// unknown customer_name
+	if (req.session.customer_name === undefined){
+		return res.redirect("/login")
+	}
+	
 	res.render("checkout/payment")
 })
 
 // payment
 router.post("/payment", async function (req, res){
+	
+	// no payment method selected
+	if (req.body.payment === undefined){
+		return res.redirect("/payment")
+	}
+	
     var customer_name = req.session.customer_name
 	var payment_method = req.body.payment
 	var id = Math.floor( Math.random()*10000000001 )
