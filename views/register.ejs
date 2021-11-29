@@ -36,6 +36,15 @@
                   </div>
 				  <% } %>
 				  <!-- end, alert for name that are already taken -->
+					  
+				  <!-- alert for email that are already taken -->
+				  <% if (email_taken === true){ %>
+				  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                     Email is already taken
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+				  <% } %>
+				  <!-- end -->
 				
 			
 				  <!-- alert for weak password -->

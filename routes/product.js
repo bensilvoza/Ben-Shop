@@ -1,6 +1,7 @@
 
 var express = require("express");
 var router  = express.Router();
+var paypal = require("paypal-rest-sdk")
 var Product = require("../models/product")
 var Cart = require("../models/cart")
 var Address = require("../models/address")
@@ -29,6 +30,25 @@ router.get("/products", async function (req, res){
 		{ products:products,
 		  welcome_message:req.session.welcome_message,
 		  customer_name:customer_name })
+})
+
+// search
+router.get("/search", async function(req, res){
+	var search = req.query.search
+	var products = await Product.find({})
+	
+	var result = []
+	for (var i = 0; i < products.length; i++){
+		 var product_name = products[i]["name"].toLowerCase()
+		 if (product_name.includes(search.toLowerCase())){
+			 result.push(products[i])
+		 }
+	}
+	
+	// modify products
+	products = result
+	
+	res.render("product/search", {search:search, products:products})
 })
 
 // show one product
@@ -258,22 +278,17 @@ router.post("/shipping", async function (req, res){
 	if (find_address === null){
 		var address = new Address({ customer_name: input["customer_name"], street: input["street"], city: input["city"], postal_code: input["postal_code"], country: input["country"] })         
 		await address.save()
-		res.redirect("/payment")
+		res.redirect("/summary")
 	} else {
 		await Address.findOneAndUpdate({customer_name: customer_name}, input)
-		res.redirect("/payment")
+		res.redirect("/summary")
 	}
 	
 })
 
-// payment
-router.get("/payment", async function (req, res){
-	res.render("checkout/payment")
-})
 
-
-// place order
-router.get("/place", async function (req, res){
+// summary
+router.get("/summary", async function (req, res){
 	var customer_name = req.session.customer_name
 	var address = await Address.findOne({customer_name: customer_name})
 	var cart = req.session.cart
@@ -283,11 +298,14 @@ router.get("/place", async function (req, res){
 	}
 	var tax = partial_total * 0.05
 	var total = partial_total + tax
-	res.render("checkout/place", {address: address, cart: cart, partial_total: partial_total, tax: tax, total: total})           
+	res.render("checkout/summary", {address: address, cart: cart, partial_total: partial_total, tax: tax, total: total})           
 })
 
 // successfully place order --> save to database
-router.post("/place", async function (req, res){
+router.post("/summary", async function (req, res){
+	
+	return res.redirect("/payment")
+	
 	var customer_name = req.session.customer_name
 	var id = Math.floor( Math.random()*10000000001 )
 	var address = await Address.findOne({customer_name: customer_name})
@@ -298,14 +316,138 @@ router.post("/place", async function (req, res){
 	}
 	var tax = partial_total * 0.05
 	var total = partial_total + tax
+	var payment_method = req.body.payment
 	
-	var order = new Order({customer_name:customer_name, id:id, address:address, order:cart, partial_total:partial_total, tax:tax, total:total })         
+	var order = new Order({customer_name:customer_name, id:id, address:address, order:cart, partial_total:partial_total, tax:tax, total:total, payment_method:payment_method })         
 	await order.save()
 	
 	// empty the cart because order was successfully place
 	req.session.cart = undefined
 	
 	res.redirect("/profile")           
+})
+
+// payment
+router.get("/payment", async function (req, res){
+	res.render("checkout/payment")
+})
+
+// payment
+router.post("/payment", async function (req, res){
+    var customer_name = req.session.customer_name
+	var payment_method = req.body.payment
+	var id = Math.floor( Math.random()*10000000001 )
+	var address = await Address.findOne({customer_name: customer_name})
+	var cart = req.session.cart
+	var partial_total = 0
+	for (var i = 0; i < cart.length; i++){
+		 partial_total = partial_total + cart[i]["price"]
+	}
+	var tax = partial_total * 0.05
+	var total = partial_total + tax
+	
+	
+	// cod
+	if (payment_method === "cod"){
+	    var order = new Order({customer_name:customer_name, id:id, address:address, order:cart, partial_total:partial_total, tax:tax, total:total, payment_method:payment_method })         
+	    await order.save()
+	
+	    // empty the cart because order was completed
+	    req.session.cart = undefined
+	
+	    return res.redirect("/profile")
+	}
+	
+	
+	// paypal
+	if (payment_method === "paypal"){
+		
+		// configure
+		paypal.configure({
+          'mode': 'sandbox',
+          'client_id': 'AVtoCYIeE4x1MBSz5PbFsiFrg6qyYGnUFoVrLnyRPoJF7FZgDCSdsRNTV6hqmoTw7mppE4jeSWK-ASgu',
+          'client_secret': 'EIB8W4MRpEM72PonrNMeTYetqLQmNKgCZhzFQVV9UMu0mHKpp9L_eedcJncYJELy0tLeT13QohcfaoRB'
+        });
+		
+		// obj
+		var create_payment_json = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": "https://benshop-yjmsi.run-ap-south1.goorm.io/payment/success",
+                "cancel_url": "https://benshop-yjmsi.run-ap-south1.goorm.io/payment"
+            },
+            "transactions": [ 
+				{"amount": {"currency": "PHP","total": total} }
+			]
+        }
+
+		// create
+	    paypal.payment.create(create_payment_json, function (error, payment) {
+          if (error) {
+              throw error;
+          } else {
+              for(let i = 0;i < payment.links.length;i++){
+                if(payment.links[i].rel === 'approval_url'){
+                  res.redirect(payment.links[i].href);
+                }
+              }
+          }
+        });
+
+
+	} // end, if statement
+	
+	
+})
+
+router.get("/payment/success", async function(req, res){
+	var payerId = req.query.PayerID;
+    var paymentId = req.query.paymentId;
+	
+	var customer_name = req.session.customer_name
+	var payment_method = "paypal"
+	var id = Math.floor( Math.random()*10000000001 )
+	var address = await Address.findOne({customer_name: customer_name})
+	var cart = req.session.cart
+	var partial_total = 0
+	for (var i = 0; i < cart.length; i++){
+		 partial_total = partial_total + cart[i]["price"]
+	}
+	var tax = partial_total * 0.05
+	var total = partial_total + tax
+
+	// obj
+    const execute_payment_json = {
+      "payer_id": payerId,
+      "transactions": [{
+          "amount": {
+              "currency": "PHP",
+              "total": total
+          }
+      }]
+    };
+
+	// execute payment
+    paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
+      if (error) {
+          // console.log(error.response);
+          throw error;
+      } else {
+        // console.log(JSON.stringify(payment));
+	
+	    var order = new Order({customer_name:customer_name, id:id, address:address, order:cart, partial_total:partial_total, tax:tax, total:total, payment_method:payment_method })         
+	    await order.save()
+	
+	    // empty the cart because order was completed
+	    req.session.cart = undefined
+	  
+        res.render('checkout/success', {order:order});
+      }
+    });
+
 })
 
 // profile

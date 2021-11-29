@@ -54,6 +54,16 @@
                   </div>
 				  <% } %>
 				  <!-- end, alert for anonymous customer -->
+					  
+				  <!-- alert for password reset -->
+				  <% if (password_reset === true){ %>
+				  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                     Password successfully reset
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+				  <% } %>
+				  <!-- end -->
+				  
 				
 					  
 				  <div class="mb-3">
@@ -61,7 +71,12 @@
                     <input type="text" class="form-control" name="name" required>
                   </div>
 				  <div class="mb-3">
-                    <label>Password</label>
+					  
+					<div class="d-flex justify-content-between">
+					 <label>Password</label>
+					 <label class="text-secondary fw-light" style="cursor:pointer;" onclick="location.href='/reset';">Forgot?</label>
+					</div>
+                    
                     <input type="password" class="form-control" name="password" required>
                   </div>
 				  <div class="d-grid gap-2">

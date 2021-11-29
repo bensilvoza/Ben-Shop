@@ -71,89 +71,33 @@
 				<div class="col-md-4 d-flex justify-content-between">
 					<p class="d-inline text-secondary">Sign In</p>
 				    <p class="d-inline text-secondary">Shipping</p>
-				    <p class="d-inline text-secondary">Payment</p>
-				    <p class="d-inline text-secondary">Place Order</p>
+				    <p class="d-inline text-secondary">Summary</p>
+				    <p class="d-inline text-secondary fw-bold">Payment</p>
 				</div>
 			</div>
 			
 			<div class="row justify-content-center mb-5">
 				<div class="col-md-4">
 					<h2 class="d-inline">Payment Method</h2>
-				</div>
-			</div>
-			
-			<div class="row justify-content-center">
-				<div class="col-md-4">
-				<h4 class="text-secondary">Select Method</h4>
-				<div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                  <label class="form-check-label" for="flexCheckChecked">
-                    Cash on Delivery
-                  </label>
-                </div>
-				</div>
-			</div>
-			<br>
-			
-			<div class="row justify-content-center">
-				<div class="col-md-4">
-				   <h6 class="text-center text-secondary">OR</h6>
-				</div>
-			</div>
-			<br>
-			
-			<!-- paypal -->
-			<div class="row justify-content-center">
-				<div class="col-md-4">
-				   <!-- Include the PayPal JavaScript SDK; replace "test" with your own sandbox Business account app client ID -->
-                   <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
-
-                   <!-- Set up a container element for the button -->
-                   <div id="paypal-button-container"></div>
-
-                   <script>
-                     paypal.Buttons({
-               
-                       // Sets up the transaction when a payment button is clicked
-                       createOrder: function(data, actions) {
-                         return actions.order.create({
-                           purchase_units: [{
-                             amount: {
-                               value: '77.44' // Can reference variables or functions. Example: `value: document.getElementById('...').value`
-                             }
-                           }]
-                         });
-                       },
-
-                       // Finalize the transaction after payer approval
-                       onApprove: function(data, actions) {
-                         return actions.order.capture().then(function(orderData) {
-                           // Successful capture! For dev/demo purposes:
-                               console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                               var transaction = orderData.purchase_units[0].payments.captures[0];
-                               alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-               
-                           // When ready to go live, remove the alert and show a success message within this page. For example:
-                           // var element = document.getElementById('paypal-button-container');
-                           // element.innerHTML = '';
-                           // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                           // Or go to another URL:  actions.redirect('thank_you.html');
-                         });
-                       }
-                     }).render('#paypal-button-container');
-
-                   </script>
-				</div>
-			</div>
-			<!-- end, paypal -->
-			
-			<br>
-			<br>
-			
-			<div class="row justify-content-center">
-				<div class="col-md-4">
-				<a href="/shipping" class="btn btn-outline-dark rounded-pill">GO BACK</a>
-				<a href="/place" class="btn btn-dark rounded-pill">CONTINUE</a>	
+					<br><br>
+				    <h4 class="text-secondary">Select Method</h4>
+				    
+					<form action="/payment" method="post" autocomplete="off">
+					<div class="form-check">
+                      <input class="form-check-input" type="radio" name="payment" value="cod">
+                        <span class="fw-bold">Cash on Delivery</span>
+                    </div>
+					
+					<div class="form-check">
+                       <input class="form-check-input" type="radio" name="payment" value="paypal">
+                         <span class="fw-bold">PayPal</span> <br> <span class="text-secondary">After clicking “Complete order”, you will be redirected to PayPal to complete your purchase securely.</span>       
+                     </div>
+					
+					<br><br><br><br>
+					<a href="/summary" class="btn btn-outline-dark rounded-pill">GO BACK</a>
+					<button type="submit" class="btn btn-dark rounded-pill">COMPLETE ORDER</button>
+					</form>
+					
 				</div>
 			</div>
 			

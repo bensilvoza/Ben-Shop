@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+
+		<title>BENSHOP</title>
+	</head>
+	<body>
+		<nav class="navbar sticky-top navbar-light bg-light">
+			<div class="container">
+				<a href="/" class="navbar-brand">BENSHOP</a>
+			    <div class="ms-auto">
+					<!-- navbar-brand to help spacing -->
+					<a class="navbar-brand lead" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+					   search
+					</a>
+					<a href="/cart" class="navbar-brand lead">
+					   cart
+					</a>
+					<a href="/login" class="navbar-brand lead">
+					   account
+					</a>
+				</div>
+			</div>
+		</nav>
+		<!-- navbar end -->
+
+		<!-- modal for search -->
+		<div
+			class="modal fade"
+			id="staticBackdrop"
+			data-bs-backdrop="static"
+			data-bs-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<input type="text" class="form-control" placeholder="search our store">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end, modal for search -->
+
+		<div class="container">
+			
+			<div class="row justify-content-center mt-5">
+				<div class="col-md-4 d-flex justify-content-between">
+					<p class="d-inline text-secondary">Sign In</p>
+				    <p class="d-inline text-secondary">Shipping</p>
+				    <p class="d-inline text-secondary fw-bold">Summary</p>
+				    <p class="d-inline text-secondary">Payment</p>
+				</div>
+			</div>
+			
+			<div class="row justify-content-center mt-5 mb-5">
+				<div class="col-md-6">
+					<h3 class="ms-3">SHIPPING</h3>
+					<p class="ms-3">Address: <%=address["street"]%>, <%=address["city"]%>, <%=address["postal_code"]%>, <%=address["country"]%> </p>
+					<hr>
+					
+					<h3 class="ms-3">PAYMENT METHOD</h3>
+					<p class="ms-3">--</p>
+					<hr>
+					
+					<h3 class="ms-3">ORDER ITEMS</h3>
+					<% for (var i = 0; i < cart.length; i++){%>
+					<div class="d-flex justify-content-between ms-3 me-5">
+						<p class="d-inline"><%=cart[i]["name"]%></p>
+						<p class="d-inline">₱<%=cart[i]["price"]%>.00</p>
+					</div>
+					<% } %>
+					<hr>
+				</div>
+				
+				<div class="col-md-4">
+					<ul class="list-group">
+					  <li class="list-group-item">
+						  <h5 class="p-3">ORDER SUMMARY</h5>
+					  </li>
+                      <li class="list-group-item">
+						  <div class="d-flex justify-content-between">
+							  <span>Items</span>
+							  <span>₱<%=partial_total%></span>        
+						  </div>
+					  </li>
+                      <li class="list-group-item">
+						  <div class="d-flex justify-content-between">
+							  <span>Shipping</span>
+							  <span>₱0.00</span>
+						  </div>
+					  </li>
+                      <li class="list-group-item">
+						  <div class="d-flex justify-content-between">
+							<span>Tax</span>
+							<span>₱<%=tax%>.00</span>
+						  </div>
+					  </li>
+					  <li class="list-group-item">
+						  <div class="d-flex justify-content-between">
+							<span>Total</span>
+							<span> <span class="text-secondary" style="font-size:12px; margin-right:8px;">PHP</span> ₱<%=total%>.00</span>
+						  </div>
+					  </li>
+					  
+					  
+                      <li class="list-group-item">
+						  <div class="d-grid">
+							 <a href="/payment" class="btn btn-dark mb-2">CONTINUE TO PAYMENT</a>
+							 <a href="/shipping" class="btn btn-outline-secondary">GO BACK TO SHIPPING</a>
+						  </div>
+					  </li>
+					  
+                    </ul>
+				</div>
+			</div>
+			
+			
+			
+		</div>
+
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

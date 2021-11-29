@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -66,44 +67,54 @@
 
 		<div class="container">
 			
-			<div class="row justify-content-center mt-5">
-				<div class="col-md-4 d-flex justify-content-between">
-					<p class="d-inline text-secondary">Sign In</p>
-				    <p class="d-inline text-secondary">Shipping</p>
-				    <p class="d-inline text-secondary">Payment</p>
-				    <p class="d-inline text-secondary">Place Order</p>
+			<div class="row justify-content-center mt-5" style="margin-bottom: 80px;">
+				<div class="col-md-4">
+					<h1 class="text-center" style="font-weight: 100;">Payment successful</h1>
+					<br>
+					<div class="text-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-patch-check text-secondary" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/></svg>
+					</div>
+					
 				</div>
 			</div>
 			
+		
 			<div class="row justify-content-center mt-5 mb-5">
-				<div class="col-md-6">
-					<h3 class="ms-3">SHIPPING</h3>
-					<p class="ms-3">Address: <%=address["street"]%>, <%=address["city"]%>, <%=address["postal_code"]%>, <%=address["country"]%> </p>
+				<div class="col-md-4">
+					
+					<h4 class="text-secondary ms-3">ORDER ID</h4>
+					<p class="ms-3"><%=order["id"]%></p>
 					<hr>
 					
-					<h3 class="ms-3">PAYMENT METHOD</h3>
-					<p class="ms-3">Cash on Delivery</p>
+					<h4 class="text-secondary ms-3">SHIPPING</h4>
+					<p class="ms-3">Address: <%=order["address"]["street"]%>, <%=order["address"]["city"]%>, <%=order["address"]["postal_code"]%>, <%=order["address"]["country"]%> </p>     
 					<hr>
 					
-					<h3 class="ms-3">ORDER ITEMS</h3>
-					<% for (var i = 0; i < cart.length; i++){%>
+					<h4 class="text-secondary ms-3">PAYMENT METHOD</h4>
+					<p class="ms-3">PayPal</p>
+					<hr>
+					
+					<h4 class="text-secondary ms-3">ORDER ITEMS</h4>
+					<% for (var j = 0; j < order["order"].length; j++){ %>
 					<div class="d-flex justify-content-between ms-3 me-5">
-						<p class="d-inline"><%=cart[i]["name"]%></p>
-						<p class="d-inline">₱<%=cart[i]["price"]%>.00</p>
+						<p class="d-inline"><%=order["order"][j]["name"]%></p>
+						<p class="d-inline">₱<%=order["order"][j]["price"]%>.00</p>
 					</div>
 					<% } %>
 					<hr>
+					
 				</div>
 				
 				<div class="col-md-4">
 					<ul class="list-group">
 					  <li class="list-group-item">
-						  <h5 class="p-3">ORDER SUMMARY</h5>
+						  <h5 class="text-secondary p-3">ORDER SUMMARY</h5>
 					  </li>
                       <li class="list-group-item">
 						  <div class="d-flex justify-content-between">
 							  <span>Items</span>
-							  <span>₱<%=partial_total%></span>        
+							  <span>₱<%=order["partial_total"]%></span>        
 						  </div>
 					  </li>
                       <li class="list-group-item">
@@ -115,31 +126,37 @@
                       <li class="list-group-item">
 						  <div class="d-flex justify-content-between">
 							<span>Tax</span>
-							<span>₱<%=tax%>.00</span>
+							<span>₱<%=order["tax"]%>.00</span>
 						  </div>
 					  </li>
 					  <li class="list-group-item">
 						  <div class="d-flex justify-content-between">
 							<span>Total</span>
-							<span>₱<%=total%>.00</span>
+							<span>₱<%=order["total"]%>.00</span>
 						  </div>
 					  </li>
-					  
-					  <form action="/place" method="post">
-                      <li class="list-group-item">
-						  <div class="d-grid">
-							 <button type="submit" class="btn btn-dark">PLACE ORDER</button>
-						  </div>
-					  </li>
-					  </form>	  
+                      
                     </ul>
 				</div>
+				
+				
+				
+				
 			</div>
 			
 			
 			
 		</div>
+		<!-- container -->
+		
+		<br>
+		<br>
+		<br>
+		
+		
+		
 
+		
 		<!-- Option 1: Bootstrap Bundle with Popper -->
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
