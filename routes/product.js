@@ -213,17 +213,23 @@ router.post("/product/reviews/edit/:id", async function (req, res){
 router.get("/cart", async function (req, res){
 	var customer_name = req.session.customer_name
 	var cart = req.session.cart
-	var subtotal = 0
+	var total = 0
 	if (cart === undefined){
 		var cart = []
-		return res.render("cart/cart", {cart: cart, subtotal: subtotal})
+		return res.render("cart/cart", {cart: cart, total: total})
 	}
 	
 	for (var i = 0; i < cart.length; i++){
-		 subtotal = subtotal + cart[i]["price"]
+		 total = total + cart[i]["price"]
+		
+		 // tax added
+		 if (i + 1 === cart.length){
+			 var tax = 0.05
+			 total = total + (total * tax)
+		 }
 	}
 	
-	res.render("cart/cart", {cart: cart, subtotal: subtotal})
+	res.render("cart/cart", {cart: cart, total: total})
 })
 
 // edit items in cart (specifically delete)
