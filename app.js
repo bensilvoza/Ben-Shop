@@ -7,6 +7,8 @@ var ejs = require('ejs')
 var methodOverride = require("method-override")
 var mongoose = require('mongoose')
 var session = require('express-session')
+var mongoSanitize = require('express-mongo-sanitize')
+var helmet = require("helmet")
 
 // require routes
 var admin = require("./routes/admin")
@@ -15,17 +17,18 @@ var product = require("./routes/product")
 
 //use
 var app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
-app.use(methodOverride("_method"));
+app.use(bodyParser.urlencoded({ extended: true }))
+app.set('view engine', 'ejs')
+app.use(express.static(__dirname + '/public'))
+app.use(methodOverride("_method"))
+app.use(mongoSanitize())
 app.use(
 	session({
 		secret: 'secret',
 		resave: false,
 		saveUninitialized: false,
 	})
-);
+)
 
 //DATABASE
 mongoose.connect(
