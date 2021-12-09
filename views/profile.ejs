@@ -124,13 +124,13 @@
                       <li class="list-group-item">
 						  <div class="d-flex justify-content-between">
 							<span>Tax</span>
-							<span>₱<%=my_orders[i]["tax"]%>.00</span>
+							<span>₱<%=Math.floor(my_orders[i]["tax"])%>.00</span>
 						  </div>
 					  </li>
 					  <li class="list-group-item">
 						  <div class="d-flex justify-content-between">
 							<span>Total</span>
-							<span>₱<%=my_orders[i]["total"]%>.00</span>
+							<span>₱<%=Math.floor(my_orders[i]["total"])%>.00</span>
 						  </div>
 					  </li>
                       

@@ -229,7 +229,7 @@ router.get("/cart", async function (req, res){
 		 }
 	}
 	
-	res.render("cart/cart", {cart: cart, total: total})
+	res.render("cart/cart", {cart:cart, total:total})
 })
 
 // edit items in cart (specifically delete)
@@ -400,8 +400,8 @@ router.post("/payment", async function (req, res){
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "https://benshop-yjmsi.run-ap-south1.goorm.io/payment/success",
-                "cancel_url": "https://benshop-yjmsi.run-ap-south1.goorm.io/payment"
+                "return_url": "https://sheltered-cliffs-00802.herokuapp.com/payment/success",
+                "cancel_url": "https://sheltered-cliffs-00802.herokuapp.com/payment"
             },
             "transactions": [ 
 				{"amount": {"currency": "PHP","total": total} }

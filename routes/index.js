@@ -199,7 +199,7 @@ router.post("/reset", async function(req, res){
 			  <p>Follow this link to reset your customer account password at BENSHOP.
 			  <br>
 			  If you didn't request a new password, you can safely delete this email.</p>
-			  <p>Reset your password <a href="https://benshop-yjmsi.run-ap-south1.goorm.io/reset/true/${email}/${password}" class="btn btn-outline-secondary">here</a>. </p>
+			  <p>Reset your password <a href="https://sheltered-cliffs-00802.herokuapp.com/reset/true/${email}/${password}" class="btn btn-outline-secondary">here</a>. </p>
       
 	          <br>
 			  <br>
